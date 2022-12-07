@@ -11,9 +11,9 @@ class HistoricalConfig(Config):
     fname_gfdl = '/data/cmip6_gfdl_historical.nc'
     fname_mpi = '/data/cmip6_mpi_historical.nc'
     fname_cesm = '/data/cmip6_cesm2_historical.nc'
-    fname_poem = '/data/poem_historical.nc'
+    fname_poem = '/data/pr_gfdl-esm4_historical_regionbox_1979-2014.nc'
 
-    test_period = ('2001', '2014'),
+    test_period = ('2005', '2014'),
     run_models: bool = False
     epoch_index: int = 50
 
@@ -24,15 +24,15 @@ class HistoricalConfig(Config):
 @dataclass
 class ProjectionConfig(Config):
     
-    fname_gan_constrained = f'/data/poem_gan_constraint_ssp585.nc'
-    fname_gan_unconstrained = f'/data/poem_gan_ssp585.nc'
+    fname_gan_constrained = '/data/poem_gan_constraint_ssp585.nc'
+    fname_gan_unconstrained = '/data/poem_gan_ssp585.nc'
     fname = '/data/poem_gan_constraint_ssp585.nc'
     fname_gfdl = '/data/cmip6_gfdl_ssp585.nc'
     fname_mpi = '/data/cmip6_mpi_ssp585.nc'
     fname_cesm = '/data/cmip6_cesm2_ssp585.nc'
     fname_poem = '/data/poem_ssp585.nc'
 
-    test_period = ('2019', '2100'),
+    test_period = ('2019', '2100')
     run_models: bool = False
     epoch_index: int = 50
 

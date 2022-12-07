@@ -183,7 +183,7 @@ class EvaluateCheckpoints():
                  checkpoint_path,
                  plot_summary=False,
                  show_plots=False,
-                 save_model=False,
+                 save_model=True,
                  constrain=False,
                  epoch_index=None,
                  projection=False,
@@ -230,11 +230,11 @@ class EvaluateCheckpoints():
         
         self.config = self.load_config()
         
-        files = self.get_files(self.checkpoint_path)
+        #files = self.get_files(self.checkpoint_path)
 
-        if self.epoch_index is not None:
-            files = [files[self.epoch_index-1]]
-
+        #if self.epoch_index is not None:
+        #    files = [files[self.epoch_index-1]]
+        files = [self.checkpoint_path]
         for i, fname in enumerate(files):
             self.checkpoint_idx = i+1
             self.num_checkpoints = len(files)
@@ -259,7 +259,6 @@ class EvaluateCheckpoints():
                 files[i] = os.path.join(path, f) 
         return files
 
-    
     def run_inference(self, path: str):
         
         inf = Inference(self.config,

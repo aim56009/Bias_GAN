@@ -1,6 +1,6 @@
 metadata_version: 1
-name: Physically Constrained Generative Adversarial Networks for Improving Precipitation
-  Fields from Earth System Models
+name: Copy of Physically Constrained Generative Adversarial Networks for Improving
+  Precipitation Fields from Earth System Models
 description: Code for training and evaluating a constrained CycleGAN to improve global
   precipitation fields from a fully coupled Earth system model.
 authors:

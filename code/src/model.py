@@ -181,7 +181,7 @@ class Generator(nn.Module):
         super().__init__()
 
         f = 1
-        num_downsampling = 2
+        num_downsampling = 0
         num_resnet_blocks = 6 if image_size == 128 else 9
 
         conv = nn.Conv2d(in_channels = in_channels, out_channels = out_channels, kernel_size = 7, stride = 1)

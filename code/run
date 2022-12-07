@@ -5,37 +5,45 @@ set -ex
 # This is the master script for the capsule. When you click "Reproducible Run", the code in this file will execute.
 
 # ------------------ Sart model training ------------------
-python -u main.py "$@"
+# python -u main.py "$@"
 
 # ------------------ Results: evalutate distributions  ------------------
-jupyter nbconvert \
-	--to 'html' \
-	--ExecutePreprocessor.allow_errors=True \
-	--ExecutePreprocessor.timeout=-1 \
-	--FilesWriter.build_directory=../results \
-	--execute notebooks/analysis-combined-results.ipynb
+#jupyter nbconvert \
+#	--to 'html' \
+#	--ExecutePreprocessor.allow_errors=True \
+#	--ExecutePreprocessor.timeout=-1 \
+#	--FilesWriter.build_directory=../results \
+#	--execute notebooks/analysis-combined-results.ipynb
 
 # ------------------ Results: evalutate CMIP6 distributions  ------------------
-jupyter nbconvert \
-	--to 'html' \
-	--ExecutePreprocessor.allow_errors=True \
-	--ExecutePreprocessor.timeout=-1 \
-	--FilesWriter.build_directory=../results \
-	--execute notebooks/analysis-combined-CMIP6.ipynb
+#jupyter nbconvert \
+#	--to 'html' \
+#	--ExecutePreprocessor.allow_errors=True \
+#	--ExecutePreprocessor.timeout=-1 \
+#	--FilesWriter.build_directory=../results \
+#	--execute notebooks/analysis-combined-CMIP6.ipynb
 
 # ------------------ Results: XAI  ------------------
-jupyter nbconvert \
-	--to 'html' \
-	--ExecutePreprocessor.allow_errors=True \
-	--ExecutePreprocessor.timeout=-1 \
-	--FilesWriter.build_directory=../results \
-	--execute notebooks/analysis-XAI.ipynb
+#jupyter nbconvert \
+#	--to 'html' \
+#	--ExecutePreprocessor.allow_errors=True \
+#	--ExecutePreprocessor.timeout=-1 \
+#	--FilesWriter.build_directory=../results \
+#	--execute notebooks/analysis-XAI.ipynb
 
 # ------------------ Results: evaluate spatial patterns  ------------------
+#jupyter nbconvert \
+#	--to 'html' \
+#	--ExecutePreprocessor.allow_errors=True \
+#	--ExecutePreprocessor.timeout=-1 \
+#	--FilesWriter.build_directory=../results \
+#	--execute notebooks/analysis-spectral-density.ipynb
+
+	# ------------------ Create model   ------------------
 jupyter nbconvert \
 	--to 'html' \
 	--ExecutePreprocessor.allow_errors=True \
 	--ExecutePreprocessor.timeout=-1 \
 	--FilesWriter.build_directory=../results \
-	--execute notebooks/analysis-spectral-density.ipynb
+	--execute notebooks/analysis-summary-stats.ipynb
 

@@ -18,21 +18,22 @@ class Config:
     
     scratch_path: str = '/results'
     tensorboard_path: str = f'{scratch_path}/'
-    checkpoint_path: str = f'{scratch_path}/'
+  #  checkpoint_path: str = f'{scratch_path}/'
+    checkpoint_path: str = '/data/last.ckpt'
     config_path: str = f'{scratch_path}/'
-    poem_path: str = f'/data/poem_historical.nc'
-    era5_path: str = f'/data/era5.nc'
+    poem_path: str = f'/data/pr_gfdl-esm4_historical_regionbox_1979-2014.nc'
+    era5_path: str = f'/data/pr_W5E5v2.0_regionbox_era5_1979-2014.nc'
     results_path: str = f'{scratch_path}/'
     projection_path: str = None
 
-    train_start: int = 1950
-    train_end: int = 1951 # set to 2000 for full run
+    train_start: int = 1979
+    train_end: int = 1980 # set to 2000 for full run
     valid_start: int = 2001
     valid_end: int = 2004
-    test_start: int = 2001
-    test_end: int = 2019
+    test_start: int = 2004
+    test_end: int = 2014
     
-    model_name: str = 'poem_gan'
+    model_name: str = 'newgan'
 
     epochs: int = 2 # set to 250 for reproduction
     progress_bar_refresh_rate: int = 1
