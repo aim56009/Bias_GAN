@@ -5,7 +5,7 @@ set -ex
 # This is the master script for the capsule. When you click "Reproducible Run", the code in this file will execute.
 
 # ------------------ Sart model training ------------------
-# python -u main.py "$@"
+ python -u main.py "$@"
 
 # ------------------ Results: evalutate distributions  ------------------
 #jupyter nbconvert \
@@ -39,7 +39,7 @@ set -ex
 #	--FilesWriter.build_directory=../results \
 #	--execute notebooks/analysis-spectral-density.ipynb
 
-	# ------------------ Create model   ------------------
+# ------------------ Create model   ------------------
 jupyter nbconvert \
 	--to 'html' \
 	--ExecutePreprocessor.allow_errors=True \

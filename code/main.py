@@ -33,7 +33,7 @@ class Config:
     test_start: int = 2004
     test_end: int = 2014
     
-    model_name: str = 'newgan'
+    model_name: str = 'new_gan'
 
     epochs: int = 2 # set to 250 for reproduction
     progress_bar_refresh_rate: int = 1

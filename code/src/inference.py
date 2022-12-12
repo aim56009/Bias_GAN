@@ -212,11 +212,22 @@ class EvaluateCheckpoints():
 
     def load_config(self):
         path = self.checkpoint_path
-        self.uuid = self.get_uuid_from_path(path)
-        config = config_from_file(f'{self.config_path}config_model_{self.uuid}.json')
+        #self.uuid = self.get_uuid_from_path(path)
+        #config = config_from_file(f'{self.config_path}config_model_{self.uuid}.json')
+        import json
+        with open('/data/checkpoint_folder') as json_file:
+            data = json.load(json_file)
+        config = ClassFromDict(data)
+
         if self.projection_path is not None:
             config.projection_path = self.projection_path
         return config
+        #def config_from_file(file_name):
+        #    import json
+        #    with open(file_name) as json_file:
+        #        data = json.load(json_file)
+        #    config = ClassFromDict(data)
+        #    return config
 
 
     def get_uuid_from_path(self, path: str):
@@ -231,9 +242,9 @@ class EvaluateCheckpoints():
         self.config = self.load_config()
         
         #files = self.get_files(self.checkpoint_path)
-
         #if self.epoch_index is not None:
         #    files = [files[self.epoch_index-1]]
+        
         files = [self.checkpoint_path]
         for i, fname in enumerate(files):
             self.checkpoint_idx = i+1
