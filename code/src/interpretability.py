@@ -31,11 +31,11 @@ class Interpretability():
         self.num_latitudes = 60
         self.num_longitudes = 96
         
-        fname = '/data/era5.nc'
+        fname = '/data/pr_W5E5v2.0_regionbox_era5_1979-2014.nc'
         self.era5 = xr.open_dataset(fname).era5_precipitation*3600*24
         self.era5 = self.era5.sel(time=slice(self.test_period[0], self.test_period[1]))
         
-        fname = '/data/poem_historical.nc'
+        fname = '/data/pr_gfdl-esm4_historical_regionbox_1979-2014.nc'
         self.poem_base = xr.open_dataset(fname).precipitation*3600*24
         self.poem = self.poem_base.sel(time=slice(self.test_period[0], self.test_period[1]))
         self.poem_reference = self.poem_base.sel(time=slice(self.train_period[0], self.train_period[1]))
