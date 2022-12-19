@@ -65,10 +65,12 @@ class Inference():
         
     def get_dataloader(self):
 
+        #datamodule = DataModule(self.config,
+        #                        trn_batch_sz = 1,
+        #                        tst_batch_sz = self.tst_batch_sz)
         datamodule = DataModule(self.config,
-                                trn_batch_sz = 1,
-                                tst_batch_sz = self.tst_batch_sz)
-
+                                training_batch_size = 1,
+                                test_batch_size = self.tst_batch_sz)
         if self.projection:
             print('running projection')
             datamodule.setup("predict")
@@ -193,7 +195,7 @@ class EvaluateCheckpoints():
 
         self.checkpoint_path = checkpoint_path
         print(f'loading checkpoints from directory: {self.checkpoint_path}')
-        self.config_path = Config.config_path
+        self.config_path = "/data/checkpoint_folder/config_model_f9ffc4a0-7ae1-11ed-b373-fd94a6d70968.json" #Config.config_path #'/results/'#Config.config_path
         self.reports_path = f'{Config.results_path}reports/'
         self.projection_path = projection_path
         self.projection = projection
@@ -211,28 +213,25 @@ class EvaluateCheckpoints():
 
 
     def load_config(self):
-        path = self.checkpoint_path
+        path = self.config_path
+            #print("path print",config_from_file)
         #self.uuid = self.get_uuid_from_path(path)
+            #print("self.uuid print",self.uuid)
         #config = config_from_file(f'{self.config_path}config_model_{self.uuid}.json')
-        import json
-        with open('/data/checkpoint_folder') as json_file:
-            data = json.load(json_file)
-        config = ClassFromDict(data)
-
+        config = config_from_file(path)
+            #print("config print",print)
         if self.projection_path is not None:
             config.projection_path = self.projection_path
         return config
-        #def config_from_file(file_name):
-        #    import json
-        #    with open(file_name) as json_file:
-        #        data = json.load(json_file)
-        #    config = ClassFromDict(data)
-        #    return config
+
 
 
     def get_uuid_from_path(self, path: str):
         import re
+        print("path in get_uuid", path)
         uuid4hex = re.compile('[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}', re.I)
+        print("uuid4hex",uuid4hex)
+        print("uuid4hex search path",uuid4hex.search(path))
         uuid = uuid4hex.search(path).group(0)
         return uuid
 
@@ -240,7 +239,6 @@ class EvaluateCheckpoints():
     def run(self):
         
         self.config = self.load_config()
-        
         #files = self.get_files(self.checkpoint_path)
         #if self.epoch_index is not None:
         #    files = [files[self.epoch_index-1]]
@@ -421,8 +419,8 @@ class LoadData():
 
     def collect_historical_data(self):
 
-        gan_constrained = self.get_gan_output(self.config.fname_gan_constrained, 
-                                              constrain=True) 
+        #gan_constrained = self.get_gan_output(self.config.fname_gan_constrained, 
+        #                                      constrain=True) 
 
         gan_unconstrained = self.get_gan_output(self.config.fname_gan_unconstrained, 
                                               constrain=False) 
@@ -431,16 +429,16 @@ class LoadData():
 
         era5 = self.get_era5_data()
 
-        qm = self.get_quantile_mapping_output()
+        #qm = self.get_quantile_mapping_output()
 
-        cmip = self.get_cmip6_output()
+        #cmip = self.get_cmip6_output()
 
         test_data = TestData(era5,
                              gan_unconstrained,
-                             cmip_model=cmip['gfdl'],
-                             gan_constrained=gan_constrained,
-                             poem=poem,
-                             quantile_mapping=qm)
+                             #cmip_model=cmip['gfdl'],
+                             #gan_constrained=gan_constrained,
+                             poem=poem)
+                             #quantile_mapping=qm)
 
         return test_data
 

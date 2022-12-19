@@ -5,12 +5,12 @@ from dataclasses import dataclass, field
 @dataclass
 class HistoricalConfig(Config):
     
-    fname_gan_constrained = f'/data/poem_gan_constraint_historical.nc'
-    fname_gan_unconstrained = f'/data/poem_gan_historical.nc'
-    fname_quantile_mapping = f'/data/poem_qm_historical.nc'
-    fname_gfdl = '/data/cmip6_gfdl_historical.nc'
-    fname_mpi = '/data/cmip6_mpi_historical.nc'
-    fname_cesm = '/data/cmip6_cesm2_historical.nc'
+    #fname_gan_constrained = f'/data/poem_gan_constraint_historical.nc'
+    fname_gan_unconstrained = f'/data/gan.nc'
+    #fname_quantile_mapping = f'/data/poem_qm_historical.nc'
+    #fname_gfdl = '/data/cmip6_gfdl_historical.nc'
+    #fname_mpi = '/data/cmip6_mpi_historical.nc'
+    #fname_cesm = '/data/cmip6_cesm2_historical.nc'
     fname_poem = '/data/pr_gfdl-esm4_historical_regionbox_1979-2014.nc'
 
     test_period = ('2005', '2014'),

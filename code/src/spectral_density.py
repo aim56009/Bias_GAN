@@ -10,21 +10,22 @@ class SpatialSpectralDensity():
         self.time_period = ('2001', '2014')
         self.num_times = None
         
-        fname = '/data/poem_gan_historical.nc'
+        fname = '/data/gan.nc'
         self.gan = xr.open_dataset(fname).gan_precipitation 
         
-        fname = '/data/era5.nc'
+        fname = '/data/pr_W5E5v2.0_regionbox_era5_1979-2014.nc'
         self.era5 = xr.open_dataset(fname).era5_precipitation*3600*24 
         
-        fname = '/data/poem_historical.nc'
+        fname = '/data/pr_gfdl-esm4_historical_regionbox_1979-2014.nc'
         self.poem = xr.open_dataset(fname).precipitation*3600*24 
         
-        fname = '/data/cmip6_gfdl_historical.nc'
-        self.cmip = xr.open_dataset(fname).precipitation*3600*24 
+        #fname = '/data/pr_gfdl-esm4_historical_regionbox_1979-2014.nc'
+        #self.cmip = xr.open_dataset(fname).precipitation*3600*24 
         
-        fname = '/data/poem_qm_historical.nc'
-        self.quantile_mapping = xr.open_dataset(fname).precipitation
+        #fname = '/data/poem_qm_historical.nc'
+        #self.quantile_mapping = xr.open_dataset(fname).precipitation
         
+
         
     def compute_mean_spectral_density(self, data: xr.DataArray):
         
@@ -61,8 +62,8 @@ class SpatialSpectralDensity():
         self.gan_psd, self.freq = self.compute_mean_spectral_density(self.gan)
         self.era5_psd, self.freq = self.compute_mean_spectral_density(self.era5)
         self.poem_psd, self.freq = self.compute_mean_spectral_density(self.poem)
-        self.cmip_psd, self.freq = self.compute_mean_spectral_density(self.cmip)
-        self.quantile_mapping_psd, self.freq = self.compute_mean_spectral_density(self.quantile_mapping)
+        #self.cmip_psd, self.freq = self.compute_mean_spectral_density(self.cmip)
+        #self.quantile_mapping_psd, self.freq = self.compute_mean_spectral_density(self.quantile_mapping)
         
         
     def plot(self, axis=None, fname=None, fontsize=None, linewidth=None):
@@ -77,8 +78,8 @@ class SpatialSpectralDensity():
         x_vals = 1/self.freq*3.75*111/2
         ax.plot(x_vals, self.era5_psd, label='ERA5', color='k', linewidth=linewidth)
         ax.plot(x_vals, self.poem_psd, label='CM2Mc-LPJmL', color='r', linewidth=linewidth)
-        ax.plot(x_vals, self.cmip_psd, label='GFDL-ESM4', color='b', linewidth=linewidth)
-        ax.plot(x_vals, self.quantile_mapping_psd, label='Quantile mapping', color='m', linewidth=linewidth)
+        #ax.plot(x_vals, self.cmip_psd, label='GFDL-ESM4', color='b', linewidth=linewidth)
+        #ax.plot(x_vals, self.quantile_mapping_psd, label='Quantile mapping', color='m', linewidth=linewidth)
         ax.plot(x_vals, self.gan_psd, label='GAN', color='c', linewidth=linewidth)
         ax.legend(loc='lower left', fontsize=fontsize)
         ax.set_xlim(x_vals[1]+1024, x_vals[-1]-32)

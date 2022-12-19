@@ -16,8 +16,9 @@ class PlotAnalysis():
         
         self.data = data
 
-        self.names = ['era5', 'poem', 'cmip_model',   \
-                 'quantile_mapping', 'gan_constrained']
+        self.names = ['era5', 'poem', 'gan_unconstrained']
+                 #self.names = ['era5', 'poem', 'cmip_model',   \
+                 #'quantile_mapping', 'gan_constrained']
 
     def single_frames(self, 
                               vmin=0,
@@ -29,16 +30,16 @@ class PlotAnalysis():
         fig, axs = plt.subplots(2,2,figsize=(12,7),  constrained_layout=True)
         alpha = 1.0 
 
-        name = ['era5','gan_constrained', 'poem' ,   \
-                 'quantile_mapping']
+        name = ['era5','gan_unconstrained', 'poem' ]
 
-        letters = ['a', 'c', 'b', 'd', 'e']
+        letters = ['a', 'c', 'b']
 
         i = 0
         for col in range(2):
             for row in range(2):
 
                 data = abs(getattr(self.data, name[i]).isel(time=time_index))
+                print("data:",self.data, name)
                 if i == 0: print(data.time.values)
 
                 ax = axs[row, col]
@@ -87,10 +88,9 @@ class PlotAnalysis():
         subfigs = fig.subfigures(2, 1, wspace=0.1, hspace=0.025)        
         alpha = 1.0 
 
-        name = ['era5', 'poem', 'gan_constrained',   \
-                 'quantile_mapping']
+        name = ['era5', 'poem', 'gan_unconstrained']
 
-        letters = ['a', 'b', 'c', 'd', 'e']
+        letters = ['a', 'b', 'c']
 
         axsLeft = subfigs[0].subplots(2, 2, sharey=True)
         i = 0
@@ -146,10 +146,9 @@ class PlotAnalysis():
         fig = plt.figure(constrained_layout=True, figsize=(14, 17))       
         alpha = 1.0 
 
-        name = ['era5', 'poem', 'gan_constrained',   \
-                 'quantile_mapping']
+        name = ['era5', 'poem', 'gan_unconstrained']
 
-        letters = ['a', 'b', 'c', 'd', 'e']
+        letters = ['a', 'b', 'c']
 
         axsLeft = subfigs[0].subplots(2, 2, sharey=True)
         i = 0

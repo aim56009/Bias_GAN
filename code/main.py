@@ -18,8 +18,8 @@ class Config:
     
     scratch_path: str = '/results'
     tensorboard_path: str = f'{scratch_path}/'
-  #  checkpoint_path: str = f'{scratch_path}/'
-    checkpoint_path: str = '/data/last.ckpt'
+    checkpoint_path: str = f'{scratch_path}/'
+    #checkpoint_path: str = '/data/checkpoint_folder/last.ckpt'
     config_path: str = f'{scratch_path}/'
     poem_path: str = f'/data/pr_gfdl-esm4_historical_regionbox_1979-2014.nc'
     era5_path: str = f'/data/pr_W5E5v2.0_regionbox_era5_1979-2014.nc'
@@ -33,7 +33,7 @@ class Config:
     test_start: int = 2004
     test_end: int = 2014
     
-    model_name: str = 'new_gan'
+    model_name: str = 'tibet_gan'
 
     epochs: int = 2 # set to 250 for reproduction
     progress_bar_refresh_rate: int = 1
@@ -43,7 +43,7 @@ class Config:
     rescale: bool = False
     epsilon: float = 0.0001
     lazy: bool = False
-    log_every_n_steps: int = 10
+    log_every_n_steps: int = 2 ### was 10
     norm_output: bool = True
     running_bias: bool = False
 

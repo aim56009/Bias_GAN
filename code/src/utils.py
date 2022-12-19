@@ -75,6 +75,7 @@ def save_config(config, version):
     import json
     uuid_legth = 36
     fname = f'{config.config_path}config_model_{version[len(version)-uuid_legth:]}.json'
+    #fname = f'config_model_{version[len(version)-uuid_legth:]}.json'
     with open(fname, 'w') as file:
         file.write(json.dumps(vars(config))) 
 
