@@ -3,9 +3,9 @@ from captum.attr import IntegratedGradients, Saliency, InputXGradient, NoiseTunn
 import torch
 import xarray as xr
 import matplotlib.pyplot as plt
-from src.plots import plot_basemap
+from Bias_GAN.code.src.plots import plot_basemap
 import scipy as sp 
-from src.utils import log_transform, norm_transform, norm_minus1_to_plus1_transform
+from Bias_GAN.code.src.utils import log_transform, norm_transform, norm_minus1_to_plus1_transform
 import scipy.ndimage
 import numpy as np
 
