@@ -4,14 +4,14 @@ import torch
 #from tqdm import tqdm
 from IPython.display import Image, display
 
-from src.model import CycleGAN, DataModule, ConstrainedGenerator
-from src.data import TestData, CycleDataset, ProjectionDataset,  load_cmip6_model, CMIP6Data
-from src.plots import PlotAnalysis
-from src.utils import log_transform, inv_norm_transform, inv_log_transform, inv_norm_minus1_to_plus1_transform, norm_minus1_to_plus1_transform, config_from_file
-from main import Config
-from src.quantile_mapping import QuantileMapping
-from src.projection_utils import ProjectionPreparation
-from src.xarray_utils import write_dataset
+from Bias_GAN.code.src.model import CycleGAN, DataModule, ConstrainedGenerator
+from Bias_GAN.code.src.data import TestData, CycleDataset, ProjectionDataset,  load_cmip6_model, CMIP6Data
+from Bias_GAN.code.src.plots import PlotAnalysis
+from Bias_GAN.code.src.utils import log_transform, inv_norm_transform, inv_log_transform, inv_norm_minus1_to_plus1_transform, norm_minus1_to_plus1_transform, config_from_file
+from Bias_GAN.code.main import Config
+from Bias_GAN.code.src.quantile_mapping import QuantileMapping
+from Bias_GAN.code.src.projection_utils import ProjectionPreparation
+from Bias_GAN.code.src.xarray_utils import write_dataset
 
 
 class Inference():
