@@ -27,7 +27,7 @@ class Config:
     projection_path: str = None
 
     train_start: int = 1979
-    train_end: int = 1980 # set to 2000 for full run
+    train_end: int = 2000 # set to 2000 for full run
     valid_start: int = 2001
     valid_end: int = 2004
     test_start: int = 2004
@@ -35,7 +35,7 @@ class Config:
     
     model_name: str = 'tibet_gan'
 
-    epochs: int = 2 # set to 250 for reproduction
+    epochs: int = 10 # set to 250 for reproduction
     progress_bar_refresh_rate: int = 1
     train_batch_size: int = 1
     test_batch_size: int = 64
