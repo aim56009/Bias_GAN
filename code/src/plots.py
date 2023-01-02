@@ -6,7 +6,7 @@ import matplotlib.ticker
 from mpl_toolkits.basemap import Basemap
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.lines import Line2D
-from src.data import TestData
+from Bias_GAN.code.src.data import TestData
 
 
 
