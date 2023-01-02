@@ -2,10 +2,10 @@ import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 import json
 
-from src.model import CycleGAN
-from src.data import DataModule
-from src.utils import get_version, set_environment, get_checkpoint_path, save_config
-from src.callbacks import get_cycle_gan_callbacks
+from Bias_GAN.code.src.model import CycleGAN
+from Bias_GAN.code.src.data import DataModule
+from Bias_GAN.code.src.utils import get_version, set_environment, get_checkpoint_path, save_config
+from Bias_GAN.code.src.callbacks import get_cycle_gan_callbacks
 
 def train_cycle_gan(config):
     """ Main routing to train the Cycle GAN """
