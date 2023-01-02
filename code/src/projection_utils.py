@@ -1,4 +1,4 @@
-from src.data import TestData
+from Bias_GAN.code.src.data import TestData
 import xarray as xr
 
 class ProjectionPreparation():
