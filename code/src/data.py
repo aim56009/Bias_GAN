@@ -5,7 +5,7 @@ import pytorch_lightning as pl
 import torch
 import xarray as xr
 from torch.utils.data import DataLoader
-from src.utils import (log_transform,
+from Bias_GAN.code.src.utils import (log_transform,
                        norm_minus1_to_plus1_transform, norm_transform)
 
 
