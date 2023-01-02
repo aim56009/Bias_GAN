@@ -10,7 +10,7 @@ import torchvision
 import torchvision.transforms as T
 from torch.utils.data import DataLoader
 
-from src.data import CycleDataset, ProjectionDataset
+from Bias_GAN.code.src.data import CycleDataset, ProjectionDataset
 
 
 """
