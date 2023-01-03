@@ -24,7 +24,7 @@ def train_cycle_gan(config):
 
     trainer = pl.Trainer(gpus = 1,
                          max_epochs = config.epochs,
-                         progress_bar_refresh_rate = config.progress_bar_refresh_rate,
+                         #progress_bar_refresh_rate = config.progress_bar_refresh_rate,
                          precision = 16, 
                          callbacks = get_cycle_gan_callbacks(checkpoint_path),
                          num_sanity_val_steps = 1,
