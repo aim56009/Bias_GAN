@@ -64,8 +64,8 @@ def get_checkpoint_path(config, version):
     uuid_legth = 36
     date_legth = 10
 
-    path = f'{checkpoint_path[:-1]}/{model_name}/{version[:date_legth]}/{version[len(version)-uuid_legth:]}'
-
+    #path = f'{checkpoint_path[:-1]}/{model_name}/{version[:date_legth]}/{version[len(version)-uuid_legth:]}'
+    path = f'{Config.checkpoint_path}/{"tibet_gan"}/{version[len(version)-uuid_legth:][:-1]}'
     #Path(path).mkdir(parents=True, exist_ok=True)
 
     return path
