@@ -107,7 +107,7 @@ def set_environment():
     mpl.rcParams["axes.grid"     ] = False
     mpl.rcParams["figure.figsize"] = (8, 4)
 
-
+"""
 def create_directories(config):
     Path(config.tensorboard_path).mkdir(parents=True, exist_ok=True)
     Path(config.checkpoint_path).mkdir(parents=True, exist_ok=True)
@@ -116,7 +116,7 @@ def create_directories(config):
     Path(f'{config.results_path}/figures/').mkdir(parents=True, exist_ok=True)
     Path(f'{config.scratch_path}/datasets/').mkdir(parents=True, exist_ok=True)
     Path(f'{config.scratch_path}/models/').mkdir(parents=True, exist_ok=True)
-
+"""
 
 def log_transform(x, epsilon):
     return np.log(x + epsilon) - np.log(epsilon)
