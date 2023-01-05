@@ -68,7 +68,7 @@ def get_checkpoint_path(config, version):
 
     ##path = f'{checkpoint_path[:-1]}/{model_name}/{version[:date_legth]}/{version[len(version)-uuid_legth:]}'
     #path = f'{config.checkpoint_path}/{version[len(version)-uuid_legth:][:-1]}'
-    path = f'{config.checkpoint_path}/{date}/{time}'
+    path = f'{config.checkpoint_path}/{date}_{time}'
     ####Path(path).mkdir(parents=True, exist_ok=True)
 
     return path
@@ -81,7 +81,7 @@ def save_config(config, version):
     time = datetime.now().time().strftime("%Hh_%Mm_%Ss")
     date = datetime.now().date().strftime("%Y_%m_%d")
     
-    fname = f'{config.config_path}config_model_{date}/{time}.json'
+    fname = f'{config.config_path}config_model_{date}_{time}.json'
     #fname = f'{config.config_path}config_model_{version[len(version)-uuid_legth:]}.json'
     ##fname = f'config_model_{version[len(version)-uuid_legth:]}.json'
     with open(fname, 'w') as file:
