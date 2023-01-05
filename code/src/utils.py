@@ -84,7 +84,8 @@ def save_config(config, version):
     #time = datetime.now().time().strftime("%Hh_%Mm_%Ss")
     #date = datetime.now().date().strftime("%Y_%m_%d")
     
-    fname = f'{config.config_path}{version}/config_model_version.json'
+    fname = f'{config.config_path}{version}/config_model.json'
+    #fname = f'{config.config_path}{version}/config_model_version.json'
     #fname = f'{config.config_path}config_model_{version[len(version)-uuid_legth:]}.json'
     ##fname = f'config_model_{version[len(version)-uuid_legth:]}.json'
     with open(fname, 'w') as file:
