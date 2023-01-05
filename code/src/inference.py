@@ -183,6 +183,7 @@ class EvaluateCheckpoints():
     
     def __init__(self,
                  checkpoint_path,
+                 config_path,
                  plot_summary=False,
                  show_plots=False,
                  save_model=True,
@@ -195,7 +196,8 @@ class EvaluateCheckpoints():
 
         self.checkpoint_path = checkpoint_path
         print(f'loading checkpoints from directory: {self.checkpoint_path}')
-        self.config_path = "/data/checkpoint_folder/config_model_f9ffc4a0-7ae1-11ed-b373-fd94a6d70968.json" #Config.config_path #'/results/'#Config.config_path
+        #self.config_path = "/data/checkpoint_folder/config_model_f9ffc4a0-7ae1-11ed-b373-fd94a6d70968.json" #Config.config_path #'/results/'#Config.config_path
+        self.config_path = config_path
         self.reports_path = f'{Config.results_path}reports/'
         self.projection_path = projection_path
         self.projection = projection
