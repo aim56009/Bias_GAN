@@ -84,7 +84,7 @@ def save_config(config, version):
     fname = f'{config.config_path}config_model_{date}_{time}.json'
     #fname = f'{config.config_path}config_model_{version[len(version)-uuid_legth:]}.json'
     ##fname = f'config_model_{version[len(version)-uuid_legth:]}.json'
-    with open(fname, 'w') as file:
+    with open({config.checkpoint_path}/{date}_{time}/fname, 'w') as file:
         file.write(json.dumps(vars(config))) 
 
 
