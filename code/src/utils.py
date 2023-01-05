@@ -55,7 +55,7 @@ def get_version():
     time = datetime.now().time().strftime("%Hh_%Mm_%Ss")
     date = datetime.now().date().strftime("%Y_%m_%d")
     #version = f'{date}/{time}_ID_{model_id}'
-    version = f'{date}/{time}'
+    version = f'{date}_{time}'
 
     return version
 
