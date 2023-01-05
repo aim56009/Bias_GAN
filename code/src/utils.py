@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib as mpl
 from pathlib import Path
 import torch
+import datetime
 
 
 
@@ -74,7 +75,7 @@ def get_checkpoint_path(config, version):
 
 def save_config(config, version):
     import json
-    import datetime
+    
     uuid_legth = 36
     
     fname = f'{config.config_path}config_model_{datetime.datetime.now().strftime("%Y%m%d-%H%M%S")}.json'
