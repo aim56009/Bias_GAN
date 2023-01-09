@@ -41,7 +41,7 @@ class TestData():
             'era5': 'k',
             'gan': 'brown',
             'cmip_model': 'b',
-            'poem': 'r',
+            'climate_model': 'r',
             'gan_constrained': 'c',
             'quantile_mapping': 'm',
         }
