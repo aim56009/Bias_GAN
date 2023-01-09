@@ -1,5 +1,5 @@
 
-from main import Config
+from Bias_GAN.code.main import Config
 from dataclasses import dataclass, field
 
 @dataclass
