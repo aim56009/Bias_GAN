@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from typing import List
 import getpass
 
-from src.trainer import train_cycle_gan
+from Bias_GAN.code.src.trainer import train_cycle_gan
 
 
 
