@@ -616,6 +616,8 @@ class CycleGAN(pl.LightningModule):
                                  on_epoch = True,
                                  prog_bar = True,
                                  logger = True)
+            
+            self.logger.experiment.add_scalar("Total Generator Loss/Train",g_tot_loss ,self.current_epoch)
 
             return g_tot_loss
         
@@ -629,6 +631,8 @@ class CycleGAN(pl.LightningModule):
             # GAN loss
             d_A_loss = self.loss.get_dis_loss(d_A_pred_real_data, d_A_pred_fake_data)
             self.log("d_A_train_loss", d_A_loss, on_step = True, on_epoch = True, prog_bar = True, logger = True)
+            
+            self.logger.experiment.add_scalar("Discriminator A Loss/Train",d_A_loss ,self.current_epoch)
 
             return d_A_loss
         
@@ -642,6 +646,8 @@ class CycleGAN(pl.LightningModule):
             # GAN loss
             d_B_loss = self.loss.get_dis_loss(d_B_pred_real_data, d_B_pred_fake_data)
             self.log("d_B_train_loss", d_B_loss, on_step = True, on_epoch = True, prog_bar = True, logger = True)
+            
+            self.logger.experiment.add_scalar("Discriminator B Loss/Train",d_B_loss ,self.current_epoch)
 
             return d_B_loss
 
