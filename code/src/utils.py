@@ -71,7 +71,7 @@ def get_checkpoint_path(config, version):
 
     ##path = f'{checkpoint_path[:-1]}/{model_name}/{version[:date_legth]}/{version[len(version)-uuid_legth:]}'
     #path = f'{config.checkpoint_path}/{version[len(version)-uuid_legth:][:-1]}'
-    path = f'{config.checkpoint_path}/{version}'
+    path = f'{config.checkpoint_path}{version}'
     ####Path(path).mkdir(parents=True, exist_ok=True)
 
     return path
