@@ -141,6 +141,7 @@ class DataModule(pl.LightningDataModule):
 
         if stage == 'test':
             self.test = CycleDataset('test', self.config)
+            self.valid = CycleDataset('valid', self.config)
 
         if stage == 'predict':
             self.test = ProjectionDataset(self.config)
