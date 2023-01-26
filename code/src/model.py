@@ -175,14 +175,22 @@ class Generator(nn.Module):
                  in_channels: int = 1,
                  out_channels: int = 64,
                  apply_dropout: bool = True,
-                 image_size: int = 128
+                 image_size: int = 128,
+                 num_resnet_blocks=6,
+                 default_nbr_resnet=True
                  ):
 
         super().__init__()
 
         f = 1
         num_downsampling = 0
-        num_resnet_blocks = 6 if image_size == 128 else 9
+        
+        if default_nbr_resnet==True:
+            num_resnet_blocks = 6 if image_size == 128 else 9
+        
+        if default_nbr_resnet==False:
+            num_resnet_blocks=num_resnet_blocks
+            
 
         conv = nn.Conv2d(in_channels = in_channels, out_channels = out_channels, kernel_size = 7, stride = 1)
         self.layers = [nn.ReflectionPad2d(3), conv, nn.InstanceNorm2d(out_channels), nn.ReLU(True)]
