@@ -190,6 +190,7 @@ class Generator(nn.Module):
         
         if default_nbr_resnet==False:
             num_resnet_blocks=num_resnet_blocks
+            print("num_resnet_blocks:",num_resnet_blocks)
             
 
         conv = nn.Conv2d(in_channels = in_channels, out_channels = out_channels, kernel_size = 7, stride = 1)
