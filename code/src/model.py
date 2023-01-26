@@ -480,8 +480,8 @@ class CycleGAN(pl.LightningModule):
 
         self.d_A = init(Discriminator(in_channels = 1, out_channels = 64, num_layers = 3))
         self.d_B = init(Discriminator(in_channels = 1, out_channels = 64, num_layers = 3))
-        self.g_A2B = init(Generator(in_channels = 1, out_channels = 64, apply_dropout = False,num_resnet_blocks,default_nbr_resnet))
-        self.g_B2A = init(Generator(in_channels = 1, out_channels = 64, apply_dropout = False,num_resnet_blocks,default_nbr_resnet))
+        self.g_A2B = init(Generator(in_channels = 1, out_channels = 64, apply_dropout = False,num_resnet_blocks=num_resnet_blocks,default_nbr_resnet=default_nbr_resnet))
+        self.g_B2A = init(Generator(in_channels = 1, out_channels = 64, apply_dropout = False,num_resnet_blocks=num_resnet_blocks,default_nbr_resnet=default_nbr_resnet))
 
         self.d_A_params = self.d_A.parameters()
         self.d_B_params = self.d_B.parameters()
