@@ -462,7 +462,7 @@ class Loss:
 class CycleGAN(pl.LightningModule):
 
     def __init__(self, d_lr: float = 2e-4, g_lr: float = 2e-4, beta_1: float = 0.5, beta_2: float = 0.999, 
-                 epoch_decay: int = 200, running_bias=False):
+                 epoch_decay: int = 200, running_bias=False,num_resnet_blocks=6, default_nbr_resnet=True):
 
         super().__init__()
 
@@ -480,8 +480,8 @@ class CycleGAN(pl.LightningModule):
 
         self.d_A = init(Discriminator(in_channels = 1, out_channels = 64, num_layers = 3))
         self.d_B = init(Discriminator(in_channels = 1, out_channels = 64, num_layers = 3))
-        self.g_A2B = init(Generator(in_channels = 1, out_channels = 64, apply_dropout = False))
-        self.g_B2A = init(Generator(in_channels = 1, out_channels = 64, apply_dropout = False))
+        self.g_A2B = init(Generator(in_channels = 1, out_channels = 64, apply_dropout = False,num_resnet_blocks,default_nbr_resnet))
+        self.g_B2A = init(Generator(in_channels = 1, out_channels = 64, apply_dropout = False,num_resnet_blocks,default_nbr_resnet))
 
         self.d_A_params = self.d_A.parameters()
         self.d_B_params = self.d_B.parameters()
