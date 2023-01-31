@@ -49,7 +49,7 @@ def show_checkpoints(path, model_name=None):
     return df
 
 
-def get_version(time,date):
+def get_version(date,time):
 
     model_id = str(uuid1())
     #time = datetime.now().time().strftime("%Hh_%Mm_%Ss")
