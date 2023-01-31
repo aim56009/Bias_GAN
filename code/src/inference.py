@@ -21,6 +21,7 @@ class Inference():
     def __init__(self,
                  config,
                  constrain=False,
+                 validation=False,
                  projection=False,
                  projection_path=None,
                  max_num_inference_steps=None):
@@ -37,6 +38,12 @@ class Inference():
         self.train_end = str(config.train_end)
         self.test_start = str(config.test_start)
         self.test_end = str(config.test_end)
+        
+        self.validation = validation
+        if self.validation==True:
+          self.valid_start = str(config.valid_start)
+          self.valid_end = str(config.valid_end)
+
         self.epsilon = config.epsilon
         self.projection = projection
         self.projection_path = projection_path
@@ -44,6 +51,9 @@ class Inference():
         self.model = None
         self.model_output = None
         self.dataset = None
+        
+        self.reconstruct_model = None
+        self.model_output_reconstr = None
 
         self.transforms = config.transforms
         self.max_num_inference_steps = max_num_inference_steps
@@ -58,16 +68,17 @@ class Inference():
         self.model = model.to(self.device)
         self.model = ConstrainedGenerator(self.model.g_B2A, constrain=self.constrain)
 
+        model_ = CycleGAN().load_from_checkpoint(checkpoint_path=checkpoint_path)
+        model_.freeze()
+        self.reconstruct_model = model_.to(self.device)
+        self.reconstruct_model = ConstrainedGenerator(self.reconstruct_model.g_A2B, constrain=self.constrain)
+
 
     def get_model(self):
-        return self.model 
+        return self.model , self.reconstruct_model
 
         
     def get_dataloader(self):
-
-        #datamodule = DataModule(self.config,
-        #                        trn_batch_sz = 1,
-        #                        tst_batch_sz = self.tst_batch_sz)
         datamodule = DataModule(self.config,
                                 training_batch_size = 1,
                                 test_batch_size = self.tst_batch_sz)
@@ -76,7 +87,11 @@ class Inference():
             datamodule.setup("predict")
         else:
             datamodule.setup("test")
-        dataloader = datamodule.test_dataloader()
+        
+        if self.validation==False:
+          dataloader = datamodule.test_dataloader()
+        else:
+          dataloader = datamodule.val_dataloader()
 
         return dataloader
 
@@ -89,22 +104,86 @@ class Inference():
     def compute(self):
         """ Use B (ESM) -> A (ERA5) generator for inference """
 
-        test_data = self.get_dataloader()
-
         data = []
-
         print("Start inference:")
-        for idx, sample in enumerate(test_data):
-            sample = sample['B'].to(self.device)
-            yhat = self.model(sample)
+        if self.validation==True:
+          valid_data = self.get_dataloader()
+          for idx, sample in enumerate(valid_data):
+              sample = sample['B'].to(self.device)
+              yhat = self.model(sample)
 
-            data.append(yhat.squeeze().cpu())
-            if self.max_num_inference_steps is not None:
-                if idx > self.max_num_inference_steps - 1:
-                    break
+              data.append(yhat.squeeze().cpu())
+              if self.max_num_inference_steps is not None:
+                  if idx > self.max_num_inference_steps - 1:
+                      break
+        else:
+          test_data = self.get_dataloader()
+          for idx, sample in enumerate(test_data):
+              sample = sample['B'].to(self.device)
+              yhat = self.model(sample)
+
+              data.append(yhat.squeeze().cpu())
+              if self.max_num_inference_steps is not None:
+                  if idx > self.max_num_inference_steps - 1:
+                      break
             
         self.model_output = torch.cat(data)
 
+
+    def compute_reconstruction(self):
+          """ Use generated  A' (ERA5) -> B (ESM)  for inference """
+
+          data_reconstr = []
+          data = []
+          print("Start inference:")
+          if self.validation==True:
+            valid_data = self.get_dataloader()
+            for idx, sample in enumerate(valid_data):
+                sample = sample['B'].to(self.device)
+                yhat = self.model(sample) ### self.g_B2A
+                reconstruct = self.reconstruct_model(yhat) ### self.g_A2B
+                plot_reconstruction(reconstruct)
+                
+                data_reconstr.append(reconstruct.squeeze().cpu())
+                data.append(yhat.squeeze().cpu())
+                if self.max_num_inference_steps is not None:
+                    if idx > self.max_num_inference_steps - 1:
+                        break
+          else:
+            test_data = self.get_dataloader()
+            for idx, sample in enumerate(test_data):
+                sample = sample['B'].to(self.device)        
+                yhat = self.model(sample)  ### self.g_B2A
+                reconstruct = self.reconstruct_model(yhat) ### self.g_A2B
+
+                """
+                print("plot first sample of batch - original data")             
+                #cs = plt.pcolormesh(sample.squeeze().cpu()[0,:,:])
+                cs = plt.pcolormesh(self.inv_transform(sample.cpu()).squeeze().cpu()[0,:,:]*3600*24,cmap="Blues")
+                plt.colorbar(cs, cax = make_axes_locatable(plt.gca()).append_axes('right', size="1.5%", pad=0.4), extend='max')
+                plt.show()
+
+                print("plot first sample of batch - generated data")
+                #cs = plt.pcolormesh(yhat.squeeze().cpu()[0,:,:])
+                cs = plt.pcolormesh(self.inv_transform(yhat.cpu()).squeeze().cpu()[0,:,:]*3600*24,cmap="Blues")
+                plt.colorbar(cs, cax = make_axes_locatable(plt.gca()).append_axes('right', size="1.5%", pad=0.4), extend='max')
+                plt.show()
+                print("plot first sample of batch - reconstructed data")
+                #cs = plt.pcolormesh(reconstruct.squeeze().cpu()[0,:,:])
+                cs = plt.pcolormesh(self.inv_transform(reconstruct.cpu()).squeeze().squeeze().cpu()[0,:,:]*3600*24,cmap="Blues")
+                plt.colorbar(cs, cax = make_axes_locatable(plt.gca()).append_axes('right', size="1.5%", pad=0.4), extend='max')
+                plt.show()
+                """
+                
+                data_reconstr.append(reconstruct.squeeze().cpu())
+                data.append(yhat.squeeze().cpu())
+                if self.max_num_inference_steps is not None:
+                    if idx > self.max_num_inference_steps - 1:
+                        break
+                        
+          self.model_output = torch.cat(data)    
+          self.model_output_reconstr = torch.cat(data_reconstr)
+          #return ori, gen , back
 
     def test(self):
         dataset = CycleDataset('test', self.config)
@@ -114,9 +193,14 @@ class Inference():
         print(data.min(), data.max())
 
     
-    def get_netcdf_result(self):
+    def get_netcdf_result(self): 
         
-        time = self.poem.sel(time=slice(self.test_start, self.test_end)).time
+        if self.validation==False:
+            print("MODE: TESTING")
+            time = self.poem.sel(time=slice(self.test_start, self.test_end)).time
+        if self.validation==True:
+            print("MODE: VALIDATION")
+            time = self.poem.sel(time=slice(self.valid_start, self.valid_end)).time
 
         if self.projection:
             time = xr.open_dataset(self.projection_path).time
@@ -133,17 +217,26 @@ class Inference():
             coords=dict(
                 time=time,
                 latitude=latitude,
-                longitude=longitude,
-            ),
-            attrs=dict(
-                description="gan_precipitation",
-                units="mm/s",
-            ))
+                longitude=longitude,),
+            attrs=dict(description="gan_precipitation",units="mm/s",))
         
+        ### for reconstruction ###
+        gan_reconstruct= xr.DataArray(
+            data=self.model_output_reconstr,
+            dims=["time", "latitude", "longitude"],
+            coords=dict(
+                time=time,
+                latitude=latitude,
+                longitude=longitude,),
+            attrs=dict(description="reconstruction_precipitation",units="mm/s",))
+
+        gan_reconstr_dataset = gan_reconstruct.to_dataset(name="gan_reconstruct")
+        self.gan_reconstr_dataset = gan_reconstr_dataset.transpose('time', 'latitude', 'longitude')
+
         gan_dataset = gan_data.to_dataset(name="gan_precipitation")
         self.gan_dataset = gan_dataset.transpose('time', 'latitude', 'longitude')
 
-        return self.gan_dataset
+        return self.gan_dataset, self.gan_reconstr_dataset
 
 
     def inv_transform(self, data, reference=None):
@@ -170,10 +263,12 @@ class Inference():
     
     def write(self, fname):
         
-        ds = self.get_netcdf_result()
+        ds, ds_reconstr = self.get_netcdf_result()
         path  = self.results_path + fname
         ds.to_netcdf(path)
+        ds.to_netcdf(path + "reconstruction")
 
+        
 
 class EvaluateCheckpoints():
     """ 
@@ -191,12 +286,13 @@ class EvaluateCheckpoints():
                  epoch_index=None,
                  projection=False,
                  max_num_inference_steps=None,
-                 projection_path=None
+                 projection_path=None,
+                 validation=False,
+                 version=""
                  ):
 
         self.checkpoint_path = checkpoint_path
-        print(f'loading checkpoints from directory: {self.checkpoint_path}')
-        #self.config_path = "/data/checkpoint_folder/config_model_f9ffc4a0-7ae1-11ed-b373-fd94a6d70968.json" #Config.config_path #'/results/'#Config.config_path
+        #print(f'loading checkpoints from directory: {self.checkpoint_path}')
         self.config_path = config_path
         self.reports_path = f'{Config.results_path}reports/'
         self.projection_path = projection_path
@@ -208,20 +304,18 @@ class EvaluateCheckpoints():
         self.save_model = save_model
         self.model_fname = 'gan.nc'
         self.model = None
+        self.reconstruct_model = None
         self.test_data = None
         self.constrain = constrain
         self.epoch_index = epoch_index
         self.max_num_inference_steps = max_num_inference_steps
+        self.validation = validation
+        self.version = version
 
 
     def load_config(self):
         path = self.config_path
-            #print("path print",config_from_file)
-        #self.uuid = self.get_uuid_from_path(path)
-            #print("self.uuid print",self.uuid)
-        #config = config_from_file(f'{self.config_path}config_model_{self.uuid}.json')
         config = config_from_file(path)
-            #print("config print",print)
         if self.projection_path is not None:
             config.projection_path = self.projection_path
         return config
@@ -238,25 +332,20 @@ class EvaluateCheckpoints():
         return uuid
 
 
-    def run(self):
+    def run(self):         ############## maybe add checkpoint_path as variable ##############
         
         self.config = self.load_config()
-        #files = self.get_files(self.checkpoint_path)
-        #if self.epoch_index is not None:
-        #    files = [files[self.epoch_index-1]]
         
         files = [self.checkpoint_path]
         for i, fname in enumerate(files):
             self.checkpoint_idx = i+1
             self.num_checkpoints = len(files)
             print(f'Checkpoint {self.checkpoint_idx} / {self.num_checkpoints}:')
-            print(fname)
-            print('')
-            self.run_inference(fname)
+            reconstruct_model_data = self.run_inference(fname)
             self.read_test_data()
             self.get_plots()
             
-        return self.get_test_data()
+        return self.get_test_data(), reconstruct_model_data
         
         
     def get_files(self, path: str):
@@ -276,25 +365,31 @@ class EvaluateCheckpoints():
                         constrain=self.constrain,
                         projection=self.projection,
                         projection_path=self.projection_path,
-                        max_num_inference_steps=self.max_num_inference_steps)
+                        max_num_inference_steps=self.max_num_inference_steps,
+                        validation=self.validation)
         inf.load_model(path)
-        inf.compute()
-        self.gan_results = inf.get_netcdf_result()
-        self.model = inf.get_model()
+        #inf.compute()
+        inf.compute_reconstruction()
+        self.gan_results, self.gan_reconstruction = inf.get_netcdf_result()
+        self.model, self.reconstruct_model = inf.get_model()
+        
         if self.save_model:
-            inf.write(self.model_fname)
-    
+            print("saving model to path:",self.version + "/" + self.model_fname)
+            inf.write(self.version + "/" + self.model_fname)
+
+        return self.gan_reconstruction
         
     def read_test_data(self):
     
         climate_model = xr.open_dataset(self.config.poem_path)
         if 'poem_precipitation' in climate_model.variables:
-            climate_model =  climate_model.poem_precipitation
+            climate_model =  climate_model.poem_precipitation#*3600*24                     #######is it nessecary to mulitply with this??########
         else:
-            climate_model =  climate_model.precipitation
-        era5 = xr.open_dataset(self.config.era5_path).era5_precipitation
+            climate_model =  climate_model.precipitation #*3600*24                         #######is it nessecary to mulitply with this??########
+        era5 = xr.open_dataset(self.config.era5_path).era5_precipitation#*3600*24            #######is it nessecary to mulitply with this??########
         gan = self.gan_results.gan_precipitation
-        
+
+
         data = TestData(era5, gan, climate_model=climate_model)
         data.convert_units()
         data.crop_test_period()
@@ -327,204 +422,6 @@ class EvaluateCheckpoints():
             plot.summary(plot_idx=self.checkpoint_idx, 
                          num_plots=self.num_checkpoints,
                          fname=fname, show_plots=self.show_plots)
-
-
-class LoadData():
-
-    def __init__(self,
-        gan_path,
-        config
-        ):
-
-        self.config = config
-        self.gan_path = gan_path
-        self.test_period = self.config.test_period[0]
-        self.unit_conversion = 3600*24
-        self.config.run_models = False
-                
-    def get_gan_output(self,
-                       fname_netcdf,
-                       constrain=True
-                      ):
-
-        path = self.gan_path
-
-        if self.config.run_models:
-            gan_output = EvaluateCheckpoints(path,
-                                       constrain=constrain,
-                                       plot_summary=False,
-                                       epoch_index=self.config.epoch_index,\
-                                       max_num_inference_steps=None,
-                                       projection=self.config.projection,\
-                                       projection_path=self.config.projection_path).run()
-            write_dataset(gan_output.gan, fname_netcdf)
-            gan_output = gan_output.gan.to_dataset(name='gan_precipitation')
-
-        else:
-             gan_output = xr.open_dataset(fname_netcdf)
-        gan_output = gan_output.gan_precipitation.rename('precipitation')
-        gan_output = self.test_set_crop(gan_output)
-        return gan_output
-
-
-    def test_set_crop(self, data):
-        data = data.sel(time=slice(self.test_period[0],
-                                   self.test_period[1]))
-        return data
-
-
-    def get_poem_output(self):
-        poem = xr.open_dataset(self.config.fname_poem).precipitation*self.unit_conversion
-        poem = self.test_set_crop(poem)
-        return poem
-
-
-    def get_era5_data(self):
-        era5 = xr.open_dataset(self.config.era5_path).era5_precipitation*self.unit_conversion
-        era5 = self.test_set_crop(era5)
-        return era5
-
-
-    def get_quantile_mapping_output(self):
-
-        if self.config.run_models:
-            qm = QuantileMapping(self.config.fname_poem,
-                                 train_split=['1990', '2000'],
-                                 test_split=['2001', '2017'],
-                                 num_quantiles=1000)
-            qm.run()
-            qm_data = qm.get_test_data()
-            qm_data = qm_data.rename('precipitation')
-
-            qm_data = self.test_set_crop(qm_data)
-            write_dataset(qm_data, self.config.fname_quantile_mapping)
-        else:    
-            qm_data = xr.open_dataset(self.config.fname_quantile_mapping).precipitation
-
-        return qm_data
-
-
-    def remove_leap_year(self, data):
-        data = data.sel(time=~((data.time.dt.month == 2) & (data.time.dt.day == 29)))
-        data = data.sel(time=slice(self.test_period[0], self.test_period[1])).to_dataset()
-        return data
-
-
-    def get_cmip6_output(self):
-        data = {
-            'gfdl': load_cmip6_model(self.config.fname_gfdl, self.test_period),
-            'mpi':  load_cmip6_model(self.config.fname_mpi, self.test_period),
-            'cesm2': load_cmip6_model(self.config.fname_cesm, self.test_period)
-        }
-        return data
-
-
-    def collect_historical_data(self):
-
-        #gan_constrained = self.get_gan_output(self.config.fname_gan_constrained, 
-        #                                      constrain=True) 
-
-        gan_unconstrained = self.get_gan_output(self.config.fname_gan_unconstrained, 
-                                              constrain=False) 
-
-        poem = self.get_poem_output()
-
-        era5 = self.get_era5_data()
-
-        #qm = self.get_quantile_mapping_output()
-
-        #cmip = self.get_cmip6_output()
-
-        test_data = TestData(era5,
-                             gan_unconstrained,
-                             #cmip_model=cmip['gfdl'],
-                             #gan_constrained=gan_constrained,
-                             poem=poem)
-                             #quantile_mapping=qm)
-
-        return test_data
-
-
-    def collect_historical_cmip_data(self):
-
-        gan_constrained = self.get_gan_output(self.config.fname_gan_constrained, 
-                                              constrain=True) 
-
-        poem = self.get_poem_output()
-
-        era5 = self.get_era5_data()
-
-        cmip = self.get_cmip6_output()
-
-        test_data = CMIP6Data(era5=era5,
-                            poem=poem,
-                            gan_constrained=gan_constrained,
-                            gfdl=cmip['gfdl'],
-                            mpi=cmip['mpi'],
-                            cesm2=cmip['cesm2'])
-
-        return test_data
-
-
-    def collect_projection_data(self, latitude_bounds=None, 
-                                names=['gan', 'gan_constrained', 'poem', 'cmip_model']):
-
-        gan_constrained = self.get_gan_output(self.config.fname_gan_constrained, 
-                                              constrain=True) 
-
-        gan_unconstrained = self.get_gan_output(self.config.fname_gan_unconstrained, 
-                                              constrain=False) 
-
-        poem = self.get_poem_output()
-
-        cmip = self.get_cmip6_output()
-        gfdl = cmip['gfdl']
-        gfdl = self.remove_leap_year(gfdl)
-        if type(gfdl) is xr.Dataset:
-            gfdl = gfdl.precipitation
-
-        test_data = TestData(gan_unconstrained,
-                             gan_unconstrained,
-                             cmip_model=gfdl,
-                             gan_constrained=gan_constrained,
-                             poem=poem)
-
-        _ = ProjectionPreparation(test_data,
-                           names ,
-                           self.test_period,
-                           latitude_bounds=latitude_bounds).run() 
-        return test_data
-
-
-
-    def collect_projection_cmip_data(self, latitude_bounds=None):
-
-        gan_constrained = self.get_gan_output(self.config.fname_gan_constrained, 
-                                              constrain=True) 
-
-
-
-        poem = self.get_poem_output()
-
-        cmip = self.get_cmip6_output()
-        gfdl = cmip['gfdl']
-        gfdl = self.remove_leap_year(gfdl)
-        if type(gfdl) is xr.Dataset:
-            gfdl = gfdl.precipitation
-
-        test_data = CMIP6Data(era5=None,
-                 poem=poem,
-                 gan_constrained=gan_constrained,
-                 gfdl=gfdl,
-                 mpi=cmip['mpi'],
-                 cesm2=cmip['cesm2'])
-
-        _ = ProjectionPreparation(test_data,
-                                   ['poem', 'gfdl', 'mpi', 'cesm2'],
-                                    self.test_period,
-                                    latitude_bounds=latitude_bounds).run() 
-        return test_data
-
 
 
 def create_folder(path):
