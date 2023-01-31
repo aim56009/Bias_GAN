@@ -21,7 +21,7 @@ class MAE_Callback(Callback):
     def __init__(self,logger,checkpoint_path,config, validation=True, lat_mean=False, plt_hist=False):
         self.MAE_list = []
         self.logger = logger
-        self.checkpoint_path = checkpoint_patgeth
+        self.checkpoint_path = checkpoint_path
         self.config = config
         self.version = get_version(config.date,config.time)
         self.validation = validation
