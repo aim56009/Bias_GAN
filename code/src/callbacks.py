@@ -1,6 +1,6 @@
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 from pytorch_lightning.callbacks import Callback
-from Bias_GAN.code.src.utils import get_version, get_checkpoint_path
+from Bias_GAN.code.src.utils import get_version
 
 
 def get_cycle_gan_callbacks(checkpoint_path) -> list:
