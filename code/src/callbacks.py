@@ -1,4 +1,6 @@
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
+from pytorch_lightning.callbacks import Callback
+
 
 def get_cycle_gan_callbacks(checkpoint_path) -> list:
 
