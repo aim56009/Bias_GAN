@@ -9,8 +9,7 @@ from Bias_GAN.code.src.data import TestData, CycleDataset, ProjectionDataset
 from Bias_GAN.code.src.plots import PlotAnalysis
 from Bias_GAN.code.src.utils import log_transform, inv_norm_transform, inv_log_transform, inv_norm_minus1_to_plus1_transform, norm_minus1_to_plus1_transform, config_from_file
 from Bias_GAN.code.main import Config
-from Bias_GAN.code.src.projection_utils import ProjectionPreparation
-from Bias_GAN.code.src.xarray_utils import write_dataset
+
 
 
 class Inference():
