@@ -140,7 +140,7 @@ class Inference():
                 sample = sample['B'].to(self.device)
                 yhat = self.model(sample) ### self.g_B2A
                 reconstruct = self.reconstruct_model(yhat) ### self.g_A2B
-                plot_reconstruction(reconstruct)
+                #plot_reconstruction(reconstruct)
                 
                 data_reconstr.append(reconstruct.squeeze().cpu())
                 data.append(yhat.squeeze().cpu())
