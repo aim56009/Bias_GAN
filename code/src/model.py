@@ -706,10 +706,10 @@ class CycleGAN(pl.LightningModule):
             grid_B.append(tensor[3:])
         
         # log the results on tensorboard
-        grid_A = torchvision.utils.make_grid(torch.cat(grid_A, 0), nrow = 6)
-        grid_B = torchvision.utils.make_grid(torch.cat(grid_B, 0), nrow = 6)
-        self.logger.experiment.add_image('Grid_A', grid_A, self.current_epoch, dataformats = "CHW")
-        self.logger.experiment.add_image('Grid_B', grid_B, self.current_epoch, dataformats = "CHW")
+        #grid_A = torchvision.utils.make_grid(torch.cat(grid_A, 0), nrow = 6)
+        #grid_B = torchvision.utils.make_grid(torch.cat(grid_B, 0), nrow = 6)
+        #self.logger.experiment.add_image('Grid_A', grid_A, self.current_epoch, dataformats = "CHW")
+        #self.logger.experiment.add_image('Grid_B', grid_B, self.current_epoch, dataformats = "CHW")
 
 
     def validation_step(self, batch, batch_idx):
