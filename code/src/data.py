@@ -71,57 +71,6 @@ class TestData():
 
 
 
-class DataModule(pl.LightningDataModule):
-
-    def __init__(self,
-                 config,
-                 training_batch_size: int = 4,
-                 test_batch_size: int = 64):
-
-
-        super().__init__()
-
-        self.config = config
-        self.training_batch_size = training_batch_size
-        self.test_batch_size = test_batch_size
-
-    def setup(self, stage: str = None):
-
-        if stage == 'fit' or stage is None:
-            self.train = CycleDataset('train', self.config)
-            self.valid = CycleDataset('valid', self.config)
-
-        if stage == 'test':
-            self.test = CycleDataset('test', self.config)
-            self.valid = CycleDataset('valid', self.config)
-
-        if stage == 'predict':
-            self.test = ProjectionDataset(self.config)
-
-
-    def train_dataloader(self):
-        return DataLoader(self.train,
-                         batch_size=self.training_batch_size,
-                         shuffle=True,
-                         num_workers=0,
-                         pin_memory=True)
-
-
-    def val_dataloader  (self):
-        return DataLoader(self.valid,
-                          batch_size=self.test_batch_size,
-                          shuffle=False,
-                          num_workers=0,
-                          pin_memory=True)
-
-
-    def test_dataloader (self):
-        return DataLoader(self.test,
-                          batch_size=self.test_batch_size,
-                          shuffle=False,
-                          num_workers=0,
-                          pin_memory=True)
-
 
 class CycleDataset(torch.utils.data.Dataset):
     
