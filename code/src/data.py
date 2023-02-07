@@ -175,3 +175,77 @@ class CycleDataset(torch.utils.data.Dataset):
 
     def __len__(self):
         return self.num_samples
+
+
+class ProjectionDataset(torch.utils.data.Dataset):
+
+    def __init__(self, config, epsilon=0.0001):
+        """ 
+            Test dataset for CMIP6 projections. Only returns the inputs y.
+        """
+
+        self.transforms = config.transforms
+        self.epsilon = epsilon
+        self.config = config
+        self.climate_model = self.load_climate_model_data()
+        climate_model_reference = self.load_climate_model_reference_data()
+        self.num_samples = len(self.climate_model.time.values)
+        self.climate_model = self.apply_transforms(self.climate_model, climate_model_reference)
+
+
+    def load_climate_model_reference_data(self):
+
+        climate_model = xr.open_dataset(self.config.poem_path)
+
+        if 'poem_precipitation' in climate_model.variables:
+            climate_model =  climate_model.poem_precipitation
+        else:
+            climate_model =  climate_model.precipitation
+
+        if not self.config.lazy:
+            climate_model = climate_model.load()
+
+        climate_model = climate_model.sel(time=slice(str(self.config.train_start), str(self.config.train_end)))
+
+        return climate_model
+
+
+    def load_climate_model_data(self):
+
+        climate_model = xr.open_dataset(self.config.projection_path)
+
+        if 'poem_precipitation' in climate_model.variables:
+            climate_model =  climate_model.poem_precipitation
+        else:
+            climate_model =  climate_model.precipitation
+
+        if not self.config.lazy:
+            climate_model = climate_model.load()
+
+        return climate_model
+
+
+    def apply_transforms(self, data, data_ref):
+
+        if 'log' in self.transforms:
+            data = log_transform(data, self.epsilon)
+            data_ref = log_transform(data_ref, self.epsilon)
+
+        if 'normalize' in self.transforms:
+            data = norm_transform(data, data_ref)
+
+        if 'normalize_minus1_to_plus1' in self.transforms:
+            data = norm_minus1_to_plus1_transform(data, data_ref)
+
+        return data
+
+
+    def __getitem__(self, index):
+
+        y = torch.from_numpy(self.climate_model.isel(time=index).values).float().unsqueeze(0)
+
+        return {'B': y}
+
+
+    def __len__(self):
+        return self.num_samples
