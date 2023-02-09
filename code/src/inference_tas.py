@@ -210,8 +210,8 @@ class Inference():
         if self.max_num_inference_steps is not None:
             time = time.isel(time=slice(0, (self.max_num_inference_steps+1)*self.tst_batch_sz))
 
-        latitude = self.poem.latitude
-        longitude = self.poem.longitude
+        latitude = self.poem.lat
+        longitude = self.poem.lon
         
         gan_data= xr.DataArray(
             data=self.model_output,
