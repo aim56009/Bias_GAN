@@ -292,7 +292,7 @@ class EvaluateCheckpoints():
         self.checkpoint_path = checkpoint_path
         #print(f'loading checkpoints from directory: {self.checkpoint_path}')
         self.config_path = config_path
-        self.reports_path = f'{Config.results_path}reports/'
+        self.reports_path = /content/gdrive/MyDrive/bias_gan/results/reports/
         self.projection_path = projection_path
         self.projection = projection
         self.plot_summary = plot_summary
