@@ -236,7 +236,7 @@ class Inference():
         self.gan_reconstr_dataset = gan_reconstr_dataset.transpose('time', 'lat', 'lon')
 
         gan_dataset = gan_data.to_dataset(name="gan_precipitation")
-        self.gan_dataset = gan_dataset.transpose('time', 'lat', 'long')
+        self.gan_dataset = gan_dataset.transpose('time', 'lat', 'lon')
 
         return self.gan_dataset, self.gan_reconstr_dataset
 
