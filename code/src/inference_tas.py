@@ -215,7 +215,7 @@ class Inference():
         
         gan_data= xr.DataArray(
             data=self.model_output,
-            dims=["time", "latitude", "longitude"],
+            dims=["time", "lat", "lon"],
             coords=dict(
                 time=time,
                 latitude=latitude,
@@ -225,7 +225,7 @@ class Inference():
         ### for reconstruction ###
         gan_reconstruct= xr.DataArray(
             data=self.model_output_reconstr,
-            dims=["time", "latitude", "longitude"],
+            dims=["time", "lat", "lon"],
             coords=dict(
                 time=time,
                 latitude=latitude,
