@@ -218,8 +218,8 @@ class Inference():
             dims=["time", "lat", "lon"],
             coords=dict(
                 time=time,
-                latitude=latitude,
-                longitude=longitude,),
+                lat=latitude,
+                lon=longitude,),
             attrs=dict(description="gan_precipitation",units="mm/s",))
         
         ### for reconstruction ###
@@ -228,15 +228,15 @@ class Inference():
             dims=["time", "lat", "lon"],
             coords=dict(
                 time=time,
-                latitude=latitude,
-                longitude=longitude,),
+                lat=latitude,
+                lon=longitude,),
             attrs=dict(description="reconstruction_precipitation",units="mm/s",))
 
         gan_reconstr_dataset = gan_reconstruct.to_dataset(name="gan_reconstruct")
-        self.gan_reconstr_dataset = gan_reconstr_dataset.transpose('time', 'latitude', 'longitude')
+        self.gan_reconstr_dataset = gan_reconstr_dataset.transpose('time', 'lat', 'lon')
 
         gan_dataset = gan_data.to_dataset(name="gan_precipitation")
-        self.gan_dataset = gan_dataset.transpose('time', 'latitude', 'longitude')
+        self.gan_dataset = gan_dataset.transpose('time', 'lat', 'long')
 
         return self.gan_dataset, self.gan_reconstr_dataset
 
