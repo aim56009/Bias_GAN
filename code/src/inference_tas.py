@@ -393,7 +393,7 @@ class EvaluateCheckpoints():
 
 
         data = TestData(era5, gan, climate_model=climate_model)
-        data.convert_units()
+        #data.convert_units()
         data.crop_test_period()
         data.show_mean()
         data.uuid = self.uuid
