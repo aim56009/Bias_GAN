@@ -246,7 +246,7 @@ class Inference():
             constraind with respect to it
         """
         if reference is None:
-            reference = self.era5.era5_precipitation.sel(time=slice(self.train_start, self.train_end)).values
+            reference = self.era5.tas.sel(time=slice(self.train_start, self.train_end)).values
 
         if 'log' in self.transforms:
             reference = log_transform(reference, self.epsilon)
