@@ -36,12 +36,12 @@ class DataModule(pl.LightningDataModule):
     def setup(self, stage: str = None):
 
         if stage == 'fit' or stage is None:
-            self.train = CycleDataset('train', self.config, self.epsilon)
-            self.valid = CycleDataset('valid', self.config, self.epsilon)
+            self.train = CycleDataset('train', self.config, self.config.epsilon)
+            self.valid = CycleDataset('valid', self.config, self.config.epsilon)
 
         if stage == 'test':
-            self.test = CycleDataset('test', self.config, self.epsilon)
-            self.valid = CycleDataset('valid', self.config, self.epsilon)
+            self.test = CycleDataset('test', self.config, self.config.epsilon)
+            self.valid = CycleDataset('valid', self.config, self.config.epsilon)
 
         if stage == 'predict':
             self.test = ProjectionDataset(self.config)
