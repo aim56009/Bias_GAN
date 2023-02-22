@@ -184,7 +184,7 @@ class Inference():
           #return ori, gen , back
 
     def test(self):
-        dataset = CycleDataset('test', self.config)
+        dataset = CycleDataset('test', self.config, self.config)
         test_data = dataset[0]
         sample = test_data['A'][0]
         data = self.inv_transform(sample)
