@@ -266,15 +266,16 @@ class PlotAnalysis():
                 linestyle= '-'
       
             data = getattr(self.data, name)
+
             label = self.data.model_name_definition(name)
             if name != "era5":
                 era5_data = getattr(self.data, "era5")
                 bias = data.mean('time') - era5_data.mean('time') 
-                print(label,f" \t \t MAE: {abs(bias).values.mean():2.3f} [mm/d]")
+                print(label,f" \t \t MAE: {abs(bias).values.mean():2.3f} [K]")
 
-            data = data.mean(dim=("longitude", "time"))
+            data = data.mean(dim=("lon", "time"))
             
-            plt.plot(data.latitude, data,
+            plt.plot(data.lat, data,
                      label=label,
                      alpha=alpha,
                      linestyle=linestyle,
@@ -286,18 +287,16 @@ class PlotAnalysis():
                      xy=(1-0.955, 0.925), xycoords=ax,
                      bbox=None) 
 
-        plt.ylim(0,3)
         plt.xlim(25,58)
         plt.xlabel('Latitude')
-        plt.ylabel('Mean precipitation [mm/d]')
+        plt.ylabel('Mean temperature [K]')
         plt.grid()
 
         if show_legend:
             plt.legend(loc='upper right')
 
         if single_plot:
-            plt.show()       
-
+            plt.show()    
 
     def avg_frames_abs_err(self, vmin=0,
                               vmax=20,
