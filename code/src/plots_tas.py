@@ -8,7 +8,6 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.lines import Line2D
 from Bias_GAN.code.src.data import TestData
 
-
 def plot_basemap(data: xr.DataArray,
                 cbar_title: str,
                 vmin: float,
@@ -134,7 +133,6 @@ def plot_basemap(data: xr.DataArray,
     if return_cs:
         return cs
 
-
 class PlotAnalysis():
     
     def __init__(self, data: TestData):
@@ -187,7 +185,7 @@ class PlotAnalysis():
                      shrink=0.4,
                      aspect=10,
                      extend='max'
-                     ).set_label('Precipitation [mm/d]', fontsize=13)
+                     ).set_label('Temperature [K]', fontsize=13)
 
 
     def histograms(self, single_plot=False, ax=None, show_legend=True, annotate=True,log=True,xlim_end=400):
@@ -240,15 +238,13 @@ class PlotAnalysis():
                         xy=(1-0.955, 0.925), xycoords=ax,
                         bbox=None) 
 
-        plt.xlabel('Precipitation [mm/d]')
+        plt.xlabel('Temperature [K]')
         plt.ylabel('Histogram')
-        #plt.xlim(0,xlim_end)
         plt.grid()
         if show_legend:
             handles, labels = ax.get_legend_handles_labels()
             new_handles = [Line2D([], [], c=h.get_edgecolor()) for h in handles]
-
-            plt.legend(handles=reversed(new_handles), labels=reversed(labels))
+            plt.legend(handles=reversed(new_handles), labels=reversed(labels),loc='upper left')
 
         if single_plot:
             plt.show()
@@ -343,9 +339,9 @@ class PlotAnalysis():
                      shrink=0.4,
                      aspect=10,
                      extend='max'
-                     ).set_label(f'Precipitation Difference to ERA5 [mm/d] x {scale_precip_by}', fontsize=13) 
+                     ).set_label(f'Temperature Difference to ERA5 [K] x {scale_precip_by}', fontsize=13) 
         if scale_precip_by != 1:
-            print(f"carefull: precipitation in the plot is scaled by a factor of {scale_precip_by}")
+            print(f"carefull: Temperature in the plot is scaled by a factor of {scale_precip_by}")
 
 
     def avg_frames(self, vmin=0,
@@ -393,10 +389,10 @@ class PlotAnalysis():
                      shrink=0.4,
                      aspect=10,
                      extend='max'
-                     ).set_label(f'Precipitation [mm/d] x {scale_precip_by}', fontsize=13)
+                     ).set_label(f'Temperature [K] x {scale_precip_by}', fontsize=13)
 
         if scale_precip_by != 1:
-            print(f"carefull: precipitation in the plot is scaled by a factor of {scale_precip_by}")
+            print(f"carefull: Temperature in the plot is scaled by a factor of {scale_precip_by}")
 
 
 
@@ -450,8 +446,8 @@ class PlotAnalysis():
         if ax is not None and annotate is True:
             ax.annotate("b", ha="center", va="center", size=15,xy=(1-0.955, 0.925), xycoords=ax,bbox=None) 
 
-        plt.xlabel(' Precipitation [mm/d]')
-        plt.ylabel(' Precipitation Histogram')
+        plt.xlabel(' Temperature [K]')
+        plt.ylabel(' Temperature Histogram')
         #plt.xlim(0,7)
         #plt.ylim(0,0.08)
         plt.grid()
@@ -512,7 +508,7 @@ class PlotAnalysis():
                         xy=(1-0.955, 0.925), xycoords=ax,
                         bbox=None) 
 
-        plt.xlabel('Precipitation [mm/d]')
+        plt.xlabel('Temperature [K]')
         plt.ylabel('Histogram')
         plt.xlim(0,xlim_end)
         plt.grid()
@@ -577,7 +573,7 @@ class PlotAnalysis():
                         xy=(1-0.955, 0.925), xycoords=ax,
                         bbox=None) 
 
-        plt.xlabel('Precipitation [mm/d]')
+        plt.xlabel('Temperature [K]')
         plt.ylabel('Histogram')
         plt.xlim(0,30)
         plt.grid()
@@ -592,71 +588,3 @@ class PlotAnalysis():
 
         if single_plot:
             plt.show()
-
-"""
-def plot_reconstruction(plot_data, vmin=0,
-                          vmax=20,
-                          time_index=-1,
-                          cmap='Blues',
-                          mask=False,
-                          single_plot=False,
-                          projection="robin",
-                          scale_precip_by=1):
-    fig, axs = plt.subplots(1, 1, figsize=(12,7),  constrained_layout=True)
-    alpha = 1.0 
-    data = abs(plot_data["gan_reconstruct"].isel(time=time_index))
-  
-    plt.title("reconstructed gan data ")
-    cbar = False
-    cbar_title = ''
-    cs = plot_basemap(scale_precip_by*data, cbar_title, vmin, vmax, alpha, cmap,cbar=cbar,axis=None,return_cs=True,projection=projection,map_resolution='c',plot_mask=mask)
-              
-    norm = matplotlib.colors.Normalize(vmin=vmin, vmax=vmax)
-    sm = plt.cm.ScalarMappable(norm=norm, cmap = cmap)
-    sm.set_array([])
-    cbar = fig.colorbar(sm,ax=axs,location='bottom',shrink=0.4,aspect=10,extend='max').set_label('Precipitation [mm/d]', fontsize=13)
-    
-def plot_reconstruction_day(plot_data, vmin=0,
-                          vmax=20,
-                          time_index=-1,
-                          cmap='Blues',
-                          mask=False,
-                          single_plot=False,
-                          projection="robin",
-                          scale_precip_by=1):
-    fig, axs = plt.subplots(1, 1, figsize=(12,7),  constrained_layout=True)
-    alpha = 1.0 
-    data = abs(plot_data)
-  
-    plt.title("reconstructed gan data ")
-    cbar = False
-    cbar_title = ''
-    cs = plot_basemap(scale_precip_by*data, cbar_title, vmin, vmax, alpha, cmap,cbar=cbar,axis=None,return_cs=True,projection=projection,map_resolution='c',plot_mask=mask)
-              
-    norm = matplotlib.colors.Normalize(vmin=vmin, vmax=vmax)
-    sm = plt.cm.ScalarMappable(norm=norm, cmap = cmap)
-    sm.set_array([])
-    cbar = fig.colorbar(sm,ax=axs,location='bottom',shrink=0.4,aspect=10,extend='max').set_label('Precipitation [mm/d]', fontsize=13)
-    
-def plot_gan(plot_data, vmin=0,
-                          vmax=20,
-                          time_index=-1,
-                          cmap='Blues',
-                          mask=False,
-                          single_plot=False,
-                          projection="robin",
-                          scale_precip_by=1):
-    fig, axs = plt.subplots(1, 1, figsize=(12,7),  constrained_layout=True)
-    alpha = 1.0 
-    data = plot_data
-  
-    plt.title("reconstructed gan data ")
-    cbar = False
-    cbar_title = ''
-    cs = plot_basemap(scale_precip_by*data, cbar_title, vmin, vmax, alpha, cmap,cbar=cbar,axis=None,return_cs=True,projection=projection,map_resolution='c',plot_mask=mask)
-              
-    norm = matplotlib.colors.Normalize(vmin=vmin, vmax=vmax)
-    sm = plt.cm.ScalarMappable(norm=norm, cmap = cmap)
-    sm.set_array([])
-    cbar = fig.colorbar(sm,ax=axs,location='bottom',shrink=0.4,aspect=10,extend='max').set_label('Precipitation [mm/d]', fontsize=13)
-"""
