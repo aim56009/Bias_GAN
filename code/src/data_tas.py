@@ -31,8 +31,8 @@ class TestData():
     def colors(self, key):
         dict = {
             'era5': 'k',
-            'gan': 'brown',
-            'climate_model': 'r',
+            'gan': 'r',
+            'climate_model': 'blue',
         }
         return dict[key]
 
